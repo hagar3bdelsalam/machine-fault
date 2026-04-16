@@ -1,5 +1,5 @@
 import numpy as np
-import AudioFeatureExtractor
+from .AudioFeatureExtractor import AudioFeatureExtractor
 
 class STFTFeatureExtractor(AudioFeatureExtractor):
     """Base class for features relying on Short-Time Fourier Transform (STFT)."""

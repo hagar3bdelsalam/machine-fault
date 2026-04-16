@@ -1,7 +1,7 @@
 import numpy as np
-import STFT
+from .STFT import STFTFeatureExtractor
 
-class LogMelSpectrogram(STFT.STFTFeatureExtractor):
+class LogMelSpectrogram(STFTFeatureExtractor):
     """Extracts Log Mel Spectrogram using the STFT pipeline."""
     
     def __init__(self, sample_rate=16000, n_fft=512, n_mels=40, hop_length=160, f_min=0.0, f_max=None):

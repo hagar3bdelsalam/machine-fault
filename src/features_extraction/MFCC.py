@@ -1,5 +1,5 @@
 import numpy as np
-import LogMelSpectrogram
+from .LogMelSpectrogram import LogMelSpectrogram
 
 class MfccExtractor(LogMelSpectrogram):
     """Extracts MFCCs by applying DCT to the Log Mel Spectrogram."""
