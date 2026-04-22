@@ -8,6 +8,9 @@ import re
 
 class Trainer:
     def __init__(self, model, train_loader, val_loader, device='cpu', lr=0.001):
+        """
+        Initializes the Trainer with model, data loaders, and optimization parameters.
+        """
         self.model = model.to(device)
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -19,12 +22,16 @@ class Trainer:
         self.history = {'train_loss': [], 'train_acc': [], 'val_loss': [], 'val_acc': []}
 
     def train_epoch(self):
+        """
+        Runs a single training epoch and returns the average loss and accuracy.
+        """
         self.model.train()
         total_loss = 0
         correct = 0
         total = 0
 
         for features, labels in self.train_loader:
+            # Handle list of features (variable length audio segments)
             if isinstance(features, list):
                 for feat, label in zip(features, labels):
                     feat = feat.unsqueeze(0).to(self.device)
@@ -36,12 +43,12 @@ class Trainer:
                     loss.backward()
                     self.optimizer.step()
 
-                    # FIXED: Math scaling for single item
                     total_loss += loss.item() * 1 
                     _, predicted = torch.max(outputs, 1)
                     total += 1
                     correct += (predicted == label).sum().item()
             else:
+                # Standard batched processing
                 features = features.to(self.device)
                 labels = labels.to(self.device)
 
@@ -51,7 +58,6 @@ class Trainer:
                 loss.backward()
                 self.optimizer.step()
 
-                # FIXED: Math scaling for batched items
                 total_loss += loss.item() * labels.size(0)
                 _, predicted = torch.max(outputs, 1)
                 total += labels.size(0)
@@ -60,6 +66,9 @@ class Trainer:
         return total_loss / total, 100 * correct / total
 
     def evaluate(self, loader=None):
+        """
+        Evaluates the model on the provided loader (defaults to validation loader).
+        """
         if loader is None:
             loader = self.val_loader
             
@@ -78,7 +87,6 @@ class Trainer:
                         outputs = self.model(feat)
                         loss = self.criterion(outputs, label.unsqueeze(0))
 
-                        # FIXED: Math scaling for single item
                         total_loss += loss.item() * 1
                         _, predicted = torch.max(outputs, 1)
                         total += 1
@@ -90,7 +98,6 @@ class Trainer:
                     outputs = self.model(features)
                     loss = self.criterion(outputs, labels)
 
-                    # FIXED: Math scaling for batched items
                     total_loss += loss.item() * labels.size(0)
                     _, predicted = torch.max(outputs, 1)
                     total += labels.size(0)
@@ -99,6 +106,9 @@ class Trainer:
         return total_loss / total, 100 * correct / total
 
     def fit(self, num_epochs=50, verbose=True, save_dir='/kaggle/working/checkpoints'):
+        """
+        Trains the model for a specified number of epochs and saves checkpoints in .pkl format.
+        """
         os.makedirs(save_dir, exist_ok=True)
         
         for epoch in range(num_epochs):
@@ -110,14 +120,14 @@ class Trainer:
             self.history['val_loss'].append(val_loss)
             self.history['val_acc'].append(val_acc)
             
+            # Save the best model state found during training
             if val_acc > self.best_val_acc:
                 self.best_val_acc = val_acc
-                # FIXED: Deep copy to CPU
                 self.best_model_state = {k: v.cpu().clone() for k, v in self.model.state_dict().items()}
 
-            # NEW: Save model every 5 epochs
+            #  Save checkpoint every 5 epochs in .pkl format
             if (epoch + 1) % 5 == 0:
-                save_path = os.path.join(save_dir, f'model_epoch_{epoch+1}.pth')
+                save_path = os.path.join(save_dir, f'model_epoch_{epoch+1}.pkl')
                 torch.save(self.model.state_dict(), save_path)
                 if verbose:
                     print(f"--> Saved checkpoint: {save_path}")
@@ -125,12 +135,20 @@ class Trainer:
             if verbose and ((epoch + 1) % 10 == 0 or epoch == 0):
                 print(f"Epoch {epoch+1:>3} | Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}% | Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.2f}%")
 
+        # Load and save the overall best model in .pkl format
         if self.best_model_state is not None:
             self.model.load_state_dict(self.best_model_state)
+            best_path = os.path.join(save_dir, 'best_model.pkl')
+            torch.save(self.best_model_state, best_path)
+            if verbose:
+                print(f"Final best model saved to {best_path}")
             
         return self.history
 
     def predict(self, loader):
+        """
+        Generates predictions for the provided data loader.
+        """
         self.model.eval()
         predictions = []
         with torch.no_grad():
@@ -148,17 +166,16 @@ class Trainer:
                     predictions.extend(predicted.cpu().numpy())
         return predictions
 
-
     def load_latest_checkpoint(self, checkpoints_dir='/kaggle/working/checkpoints'):
-        import os
-        import glob
-        import re
-        
+        """
+        Resumes training from the most recent .pkl checkpoint found in the directory.
+        """
         if not os.path.exists(checkpoints_dir):
             print("No checkpoint directory found. Starting fresh.")
             return 0
 
-        checkpoint_files = glob.glob(os.path.join(checkpoints_dir, 'model_epoch_*.pth'))
+        #  Look for .pkl files specifically
+        checkpoint_files = glob.glob(os.path.join(checkpoints_dir, 'model_epoch_*.pkl'))
         if not checkpoint_files:
             print("No checkpoints found in directory. Starting fresh.")
             return 0
@@ -167,7 +184,8 @@ class Trainer:
         max_epoch = -1
         
         for file in checkpoint_files:
-            match = re.search(r'model_epoch_(\d+)\.pth', file)
+            #  Search for .pkl extension
+            match = re.search(r'model_epoch_(\d+)\.pkl', file)
             if match:
                 epoch = int(match.group(1))
                 if epoch > max_epoch:
@@ -175,9 +193,23 @@ class Trainer:
                     latest_file = file
 
         if latest_file:
-            # FIXED: Use self.model instead of model
             self.model.load_state_dict(torch.load(latest_file))
             print(f"Successfully resumed from {latest_file} (Epoch {max_epoch})")
             return max_epoch
         
         return 0
+    def count_parameters(self):
+        """
+        Calculates and prints the number of total and trainable parameters.
+        """
+        total_params = sum(p.numel() for p in self.model.parameters())
+        trainable_params = sum(p.numel() for p in self.model.parameters() if p.requires_grad)
+        
+        print(f"\n{'='*30}")
+        print(f"Model Parameter Analysis")
+        print(f"{'='*30}")
+        print(f"Total Parameters:     {total_params:,}")
+        print(f"Trainable Parameters: {trainable_params:,}")
+        print(f"{'='*30}\n")
+        
+        return total_params, trainable_params
