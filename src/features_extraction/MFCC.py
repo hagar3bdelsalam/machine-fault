@@ -4,7 +4,7 @@ from .LogMelSpectrogram import LogMelSpectrogram
 class MfccExtractor(LogMelSpectrogram):
     """Extracts MFCCs by applying DCT to the Log Mel Spectrogram."""
     
-    def __init__(self, sample_rate=16000, n_fft=512, n_mels=40, hop_length=160, n_mfcc=13, f_min=0.0, f_max=None):
+    def __init__(self, sample_rate=16000, n_fft=512, n_mels=40, hop_length=160, n_mfcc=40, f_min=0.0, f_max=None):
         super().__init__(sample_rate, n_fft, n_mels, hop_length, f_min, f_max)
         self.n_mfcc = n_mfcc
         self.dct_matrix = self._init_dct_matrix()
