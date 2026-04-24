@@ -19,17 +19,6 @@ DEFAULT_MODEL_CONFIG = {
     "target_length": 250,
 }
 
-# Map model output indices to correct class indices
-# Model output -> Desired output
-CLASS_MAPPING = {
-    0: 1,  # Machine 1, Abnormal -> 1
-    1: 0,  # Machine 1, Normal -> 0
-    2: 3,  # Machine 2, Abnormal -> 3
-    3: 2,  # Machine 2, Normal -> 2
-    4: 5,  # Machine 3, Abnormal -> 5
-    5: 4,  # Machine 3, Normal -> 4
-}
-
 
 def load_model(model_path, device=None):
     """
@@ -169,7 +158,7 @@ def predict_single_audio(audio_file_path, model, mfcc_extractor, device,
     # Start timer after file I/O
     start_time = time.time()
     
-    y_clean, sr = preprocess_single_audio(y, sr)
+    y_clean, _sr = preprocess_single_audio(y, sr)
     # Extract features
     mfcc_features = mfcc_extractor.process(y_clean)
     
@@ -183,26 +172,19 @@ def predict_single_audio(audio_file_path, model, mfcc_extractor, device,
     # Predict
     with torch.no_grad():
         output = model(features_tensor)
-        probs = torch.softmax(output, dim=1).squeeze().cpu().numpy()
-        model_prediction = int(torch.argmax(output, dim=1).item())
+        prediction = int(torch.argmax(output, dim=1).item())
+        # calculate probabilities if requested (for app.py display)
+        if return_probs:
+            probs = torch.softmax(output, dim=1).squeeze().cpu().numpy()
+        else:
+            probs = None
 
     if device.type == "cuda":
         torch.cuda.synchronize()
     
-    # Map model output to correct class index
-    prediction = CLASS_MAPPING.get(model_prediction, model_prediction)
-
-    
     elapsed_time = time.time() - start_time
     
-    # Remap probabilities array to match mapped class indices
-    # Create inverse mapping: mapped_class -> model_class
-    inverse_mapping = {v: k for k, v in CLASS_MAPPING.items()}
-    remapped_probs = np.zeros_like(probs)
-    for mapped_class, model_class in inverse_mapping.items():
-        remapped_probs[mapped_class] = probs[model_class]
-    
     if return_probs:
-        return prediction, remapped_probs, elapsed_time
+        return prediction, probs, elapsed_time
     else:
         return prediction, elapsed_time
