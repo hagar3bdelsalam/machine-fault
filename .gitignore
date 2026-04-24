@@ -1,0 +1,49 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Logs
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model files (VERY IMPORTANT for your project)
+*.pkl
+*.pt
+*.pth
+
+
+# Audio / dataset (if not required in repo)
+data/
+dataset/
+processed_data/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker artifacts
+*.tar
+*.tar.gz
+
+# output files
+results/
