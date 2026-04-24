@@ -25,10 +25,10 @@ env/
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Model files (VERY IMPORTANT for your project)
-*.pkl
-*.pt
-*.pth
+# # Model files (VERY IMPORTANT for your project)
+# *.pkl
+# *.pt
+# *.pth
 
 
 # Audio / dataset (if not required in repo)
