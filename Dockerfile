@@ -18,8 +18,17 @@ COPY . /app
 # Upgrade pip
 RUN pip install --upgrade pip
 
-# Install Python dependencies
+# Install PyTorch CPU FIRST (important)
+RUN pip install --no-cache-dir \
+    torch==2.1.0+cpu \
+    torchvision==0.16.0+cpu \
+    -f https://download.pytorch.org/whl/torch_stable.html
+
+# Install rest of requirements
 RUN pip install --no-cache-dir -r src/requirements.txt
+
+RUN test -f src/model/model_epoch_75.pkl || \
+    (echo "ERROR: src/model/model_epoch_75.pkl not found" && exit 1)
 
 # Make infer.py executable
 RUN chmod +x /app/infer.py
