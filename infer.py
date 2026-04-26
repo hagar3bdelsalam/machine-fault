@@ -14,33 +14,44 @@ from src.train.inference_utils import (
 def get_sorted_audio_files(data_dir):
     """
     Get all audio files from directory, sorted numerically.
+    Supports: .wav, .mp3, .flac, .ogg
     """
     if not os.path.isdir(data_dir):
         raise ValueError(f"Data directory not found: {data_dir}")
     
-    wav_files = glob.glob(os.path.join(data_dir, '*.wav'))
+    # Search for all supported audio formats
+    audio_extensions = ['*.wav', '*.mp3', '*.flac', '*.ogg', '*.m4a']
+    audio_files = []
+    
+    for ext in audio_extensions:
+        audio_files.extend(glob.glob(os.path.join(data_dir, ext)))
+        # Also check uppercase extensions
+        audio_files.extend(glob.glob(os.path.join(data_dir, ext.upper())))
     
     # Sort numerically by extracting the numeric part of the filename
     def extract_number(filename):
-        match = re.search(r'(\d+)\.wav$', filename)
+        # Extract just the filename without path
+        base_filename = os.path.basename(filename)
+        # Match numeric part in the filename
+        match = re.search(r'(\d+)', base_filename)
         if match:
             return int(match.group(1))
         return float('inf')
     
-    wav_files.sort(key=extract_number)
+    audio_files.sort(key=extract_number)
     
-    if not wav_files:
-        raise ValueError(f"No .wav files found in {data_dir}")
+    if not audio_files:
+        raise ValueError(f"No audio files found in {data_dir}")
     
-    return wav_files
+    return audio_files
 
 
-def infer(data_dir, model_path='src/model/model_epoch_75.pkl', output_dir='.'):
+def infer(data_dir, model_path='src/model/model_epoch_75.pkl', output_dir='./results'):
     """
     Run inference on all audio files in the data directory.
     
     Args:
-        data_dir: Directory containing .wav files to process
+        data_dir: Directory containing audio files to process
         model_path: Path to the model weights file
         output_dir: Directory to save results to
     """
