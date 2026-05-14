@@ -1,4 +1,5 @@
-# 🔊 Machine Fault Recognition
+
+#  Machine Fault Recognition
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
@@ -9,9 +10,9 @@ An automated, robust machine condition monitoring system designed to classify in
 
 ---
 
-## <img src="https://i.postimg.cc/0jLY7ZDn/lightbulb.png" width="24" /> Key Highlights
+##  Key Highlights
 
-- **High Accuracy:** Achieved **99.55%** test accuracy across 6 distinct operation states.
+- **High Accuracy:** Achieved exceptional test accuracy across 6 distinct operation states.
 - **Real-Time Performance:** Average inference time of **0.08 ms** per sample.
 - **Lightweight:** Only **274,310 parameters**, making it suitable for edge deployment.
 - **Decoupled Pipeline:** Clean separation between preprocessing, feature extraction, and classification.
@@ -45,11 +46,12 @@ flowchart LR
     Conv3 --> Adaptive["AdaptiveAvgPool<br/><br/>"]:::pool
     Adaptive --> FC["Fully Connected<br/>(128)<br/><br/>"]:::dense
     FC --> Output["Output<br/>6 Classes<br/><br/>"]:::io
+
 ```
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```text
 .
@@ -66,26 +68,35 @@ flowchart LR
 │   ├── dataloader/         # PyTorch Dataset implementation
 │   └── requirements.txt    # Project Dependencies
 └── Readme.md               # You are here!
+
 ```
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### Local Setup
+
 1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/hagar3bdelsalam/machine-fault.git
-   cd machine-fault
-   ```
+```bash
+git clone [https://github.com/hagar3bdelsalam/machine-fault.git](https://github.com/hagar3bdelsalam/machine-fault.git)
+cd machine-fault
+
+```
+
+
 2. **Install dependencies:**
-   ```bash
-   pip install -r src/requirements.txt
-   ```
+```bash
+pip install -r src/requirements.txt
+
+```
+
+
 3. **Download Model Weights:**
-   Ensure `src/model/model_epoch_75.pkl` is present in the directory.
+Ensure `src/model/model_epoch_75.pkl` is present in the directory.
 
 ### Docker Deployment
+
 ```bash
 # Build the image
 docker build -t machine-fault-detector .
@@ -95,52 +106,43 @@ docker run --rm \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/results:/app/results \
   machine-fault-detector data
+
 ```
 
----
 
-## 🖥 Usage
+##  Usage
 
-### 🌐 Streamlit Web App
+###  Streamlit Web App
+
 Launch the interactive dashboard to upload audio files and see real-time classification results:
+
 ```bash
 streamlit run app.py
+
 ```
 
-### 🔍 Batch Inference
+###  Batch Inference
+
 Run inference on all files in the `data/` directory:
+
 ```bash
 python infer.py
+
 ```
+
 Results will be saved to `results/results.txt`.
 
----
-
-## 📊 Evaluation Results
-
-| Metric | Value |
-| :--- | :--- |
-| **Test Accuracy** | **99.55%** |
-| **Inference Time** | **0.08 ms** |
-| **F1-Score (Macro)** | **0.99** |
-| **Total Parameters** | **274,310** |
-
-### Classification Report (Sample)
-- **Machine 1 (Normal/Abnormal):** 1.00 / 0.98
-- **Machine 2 (Normal/Abnormal):** 1.00 / 0.99
-- **Machine 3 (Normal/Abnormal):** 1.00 / 1.00
-
----
 
 
-## 👥 Contributors
 
-| <a href="https://avatars.githubusercontent.com/Esraa-Hassan0?v=4"><img src="https://avatars.githubusercontent.com/Esraa-Hassan0?v=4" alt="Esraa Hassan" width="150"></a> | <a href="https://avatars.githubusercontent.com/hagar3bdelsalam?v=4"><img src="https://avatars.githubusercontent.com/hagar3bdelsalam?v=4" alt="Hagar Abdelsalam" width="150"></a> | <a href="https://avatars.githubusercontent.com/ahmedkamal14?v=4"><img src="https://avatars.githubusercontent.com/ahmedkamal14?v=4" alt="Ahmed Kamal" width="150"></a> | <a href="https://avatars.githubusercontent.com/Safan05?v=4"><img src="https://avatars.githubusercontent.com/Safan05?v=4" alt="Abdallah Safan" width="150"></a> |
-| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                                                           [Esraa Hassan](https://github.com/Esraa-Hassan0)                                                            |                                                           [Hagar Abdelsalam](https://github.com/hagar3bdelsalam)                                                            |                                                          [Ahmed Kamal](https://github.com/ahmedkamal14)                                                           |                                                            [Abdallah Safan](https://github.com/Safan05)                                                            |
+##  Contributors
+
+|  |  |  |  |
+| --- | --- | --- | --- |
+| [Esraa Hassan](https://github.com/Esraa-Hassan0) | [Hagar Abdelsalam](https://github.com/hagar3bdelsalam) | [Ahmed Kamal](https://github.com/ahmedkamal14) | [Abdallah Safan](https://github.com/Safan05) |
 
 
----
 
-## 📜 References
-- **SEnv-Net Architecture:** Abd Al-Hattab et al. (2021). *"Rethinking environmental sound classification using convolutional neural networks"*. [Link to Paper](https://doi.org/10.1007/s00521-021-06091-7).
+##  References
+
+* **SEnv-Net Architecture:** Abd Al-Hattab et al. (2021). *"Rethinking environmental sound classification using convolutional neural networks"*. [Link to Paper](https://doi.org/10.1007/s00521-021-06091-7).
