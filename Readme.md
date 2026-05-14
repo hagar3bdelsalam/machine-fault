@@ -135,12 +135,14 @@ Results will be saved to `results/results.txt`.
 
 
 
-##  Contributors
+## Contributors
 
-|  |  |  |  |
-| --- | --- | --- | --- |
-| [Esraa Hassan](https://github.com/Esraa-Hassan0) | [Hagar Abdelsalam](https://github.com/hagar3bdelsalam) | [Ahmed Kamal](https://github.com/ahmedkamal14) | [Abdallah Safan](https://github.com/Safan05) |
+| <a href="https://avatars.githubusercontent.com/Esraa-Hassan0?v=4"><img src="https://avatars.githubusercontent.com/Esraa-Hassan0?v=4" alt="Esraa Hassan" width="150"></a> | <a href="https://avatars.githubusercontent.com/hagar3bdelsalam?v=4"><img src="https://avatars.githubusercontent.com/hagar3bdelsalam?v=4" alt="Hagar Abdelsalam" width="150"></a> | <a href="https://avatars.githubusercontent.com/ahmedkamal14?v=4"><img src="https://avatars.githubusercontent.com/ahmedkamal14?v=4" alt="Ahmed Kamal" width="150"></a> | <a href="https://avatars.githubusercontent.com/Safan05?v=4"><img src="https://avatars.githubusercontent.com/Safan05?v=4" alt="Abdallah Safan" width="150"></a> |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                                                           [Esraa Hassan](https://github.com/Esraa-Hassan0)                                                            |                                                           [Hagar Abdelsalam](https://github.com/hagar3bdelsalam)                                                            |                                                          [Ahmed Kamal](https://github.com/ahmedkamal14)                                                           |                                                            [Abdallah Safan](https://github.com/Safan05)                                                            |
 
+
+---
 
 
 ##  References
